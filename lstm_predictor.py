@@ -1,6 +1,7 @@
 import pandas as pd
 import keras
 import trip_data_parser
+import sequence_creator
 
 trip_data_file = "data/trip_data_jan_sept_2017_reduced.csv"
 weather_data_file = "data/weather_jan_sept_2017.csv"
@@ -11,5 +12,6 @@ time_slot_size = 30 # minutes
 pick_ups_by_station = trip_data_parser.get_pick_ups(trip_data_file,weather_data_file,
                                                     time_slot_size,new_york_holidays)
 
-test_station = pick_ups_by_station[72]
+test_station = pick_ups_by_station[72].copy()
 
+sequence_creator.convert_to_sequence(test_station,2)
