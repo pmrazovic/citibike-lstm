@@ -33,11 +33,18 @@ station_df = pd.DataFrame(min_max_scaler.fit_transform(station_df), columns=stat
 # Frame data as a sequence
 # x_data is input, y_data is output
 lag = 15
-x_data, y_data = sequence_creator.convert_to_sequence(station_df,["pick_ups"],lag,1)
+ahead = 1
+x_data, y_data = sequence_creator.convert_to_sequence(station_df,["pick_ups"],lag,ahead,True)
 
-# Convert data into np array and split into traning and test
+# Split data into traning and test
+# For now test data is only 10%, because later we will use rolling forcast origin
 x_data_train, x_data_test, y_data_train, y_data_test = train_test_split(x_data, y_data, test_size=0.10, shuffle=False)
 
-# Reshape input to be 3D [samples, timesteps, features]
+# Reshape input to be 3D nparray of shape [samples, timesteps, features]
 x_data_train = x_data_train.values.reshape((x_data_train.shape[0], lag+1, x_data_train.shape[1]/(lag+1)))
 x_data_test = x_data_test.values.reshape((x_data_test.shape[0], lag+1, x_data_test.shape[1]/(lag+1)))
+
+# Reshape output to be 2D nparray of shape [samples, output_variables]
+y_data_train = y_data_train.values
+y_data_test = y_data_test.values
+
