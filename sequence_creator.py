@@ -7,7 +7,7 @@ def convert_to_sequence(df, output_columns, lags=0, aheads=1, dropnan=True):
     for lag in range(lags, 0, -1):
         for column in df.columns:
             new_column_name = column+"_lag_"+str(lag)
-            new_df[new_column_name] = df[column].shift(lag)
+            new_df[new_column_name] = df[column].shift(lag).values
             x_columns.append(new_column_name)
     # Add current observation (t)
     for column in df.columns:
@@ -18,9 +18,9 @@ def convert_to_sequence(df, output_columns, lags=0, aheads=1, dropnan=True):
     for ahead in range(1, aheads+1, 1):
         for output_column in output_columns:
             new_column_name = output_column+"_ahead_"+str(ahead)
-            new_df[new_column_name] = df[output_column].shift(-ahead)
+            new_df[new_column_name] = df[output_column].shift(-ahead).values
             y_columns.append(new_column_name)
     if dropnan:
         new_df.dropna(inplace=True)
-    
-    return [new_df[x_columns], new_df[y_columns]]
+    return new_df.values
+    #return [new_df[x_columns], new_df[y_columns]]
